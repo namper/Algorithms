@@ -42,6 +42,7 @@ class Graph{
 			// ამობეჭდე გრაფისთვის მატრიცული ფორმა
 			for(auto i:this->iVar){
 				std::list<char> currentList = this->adjacents[i.second];
+				std::cout << i.second << " ";
 				for(int j=0; j<this->length; j++){
 					bool contains = std::find(currentList.begin(),
 					currentList.end(),this->iVar[j]) != currentList.end();
@@ -55,9 +56,11 @@ class Graph{
 		
 };
 
+
 int main(){
-	std::list<char> nodenames = {'a', 'b', 'd', 'e', 'f'};
-    Graph g(nodenames, false);
+	// პირველი ვარიანტი
+	std::cout << "პირველი ვარიანიტი: " << std::endl;
+    Graph g({'a', 'b', 'd', 'e', 'f'}, false);
     g.addEdge('a', 'd');
 	g.addEdge('b', 'a');
     g.addEdge('b', 'e');
@@ -67,9 +70,30 @@ int main(){
     g.addEdge('e', 'd');
 	g.addEdge('f', 'e');
 
-    std::cout << "Representation:  " << std::endl;
+    std::cout << "ბმული სიის სახით:  " <<std::endl;
     g.printGraph();
-	std::cout << "Matrix Form: " << std::endl;
+	std::cout << "მატრიცის სახით: " << std::endl;
+	g.matrixForm();
+	std::cout << std::endl;
+
+
+	// მეორე ვარიანტი
+	std::cout << "მეორე ვარიანიტი: " << std::endl;
+	Graph G({'a', 'b', 'c', 'd', 'e', 'f'}, false);
+	G.addEdge('a', 'd');
+	G.addEdge('b', 'a');
+	G.addEdge('b', 'e');
+	G.addEdge('c', 'b');
+	G.addEdge('a', 'e');
+	G.addEdge('c', 'e');
+	G.addEdge('d', 'b');
+	G.addEdge('e', 'd');
+	G.addEdge('f', 'e');
+	G.addEdge('f', 'c');
+
+	std::cout << "ბმული სიის სახით:  " <<std::endl;
+    g.printGraph();
+	std::cout << "მატრიცის სახით: " << std::endl;
 	g.matrixForm();
 
 
