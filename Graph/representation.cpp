@@ -92,9 +92,9 @@ int main(){
 	G.addEdge('f', 'c');
 
 	std::cout << "ბმული სიის სახით:  " <<std::endl;
-    g.printGraph();
+    G.printGraph();
 	std::cout << "მატრიცის სახით: " << std::endl;
-	g.matrixForm();
+	G.matrixForm();
 
 
     return 0;
