@@ -43,7 +43,6 @@ bool Graph::isChromaticTwo()
     list<int>::iterator i;
     while(!Q.empty() && is_chromatic){
         s = Q.front();
-        cout << s << " ";
         Q.pop_front();
         for(i=adj[s].begin(); i!=adj[s].end(); ++i){
             if(!visited[*i]){
