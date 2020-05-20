@@ -13,55 +13,95 @@ using namespace std;
 # define _d 3
 # define _a 4
 
-// def: e: 0, b: 1, c: 2, d: 3, a: 4
 typedef pair<int, int> iPair;
+
+struct Tuple{
+    int weight;
+    string path;
+
+    bool validate(){
+        return weight != INF && !path.empty();
+    }
+};
 
 
 class Graph
 {
     int V;
-
     int source;
     int through;
-    int through_w;
-
     list< pair<int, int> > *adj;
-    string *path;
+
     public:
-    Graph(int V, int source, int through);
-    void addEdge(int u, int v, int w);
-    void shortestPath();
+        Graph(int V, int source, int through);
+        void addEdge(int u, int v, int w);
+        void executeSolution();
+        void shortestPath(int s, string startingPath, int add_w);
+        Tuple findShortestPath(int s, int t);
 };
 
 Graph::Graph(int V, int source, int through)
-{   this->V = V;
-    adj = new list<iPair>[V];
-    path = new string[V];
+{   
+    this->V = V;
     this->through = through;
     this->source = source;
-    through_w = 0;
+
+    adj = new list<iPair>[V];
+
 }
 
 
 void Graph::addEdge(int u, int v, int w)
 {
-    if (u == this->source && v == this->through){
-        this->through_w = w;
-        w = 0;
-    }
     adj[u].push_back(make_pair(v, w));
 }
 
 
-void Graph::shortestPath()
-{
-
+Tuple Graph::findShortestPath(int s, int t){
+    // უმოკლესი გზა საწყისიდან გამავლ წვერომდე
     priority_queue< iPair, vector <iPair>, greater<iPair> > pq;
     vector<int> dist(V, INF);
+    vector<string> path(V);
 
-    pq.push(make_pair(0, this->source));
-    dist[this->source] = 0;
-    path[this->source] = to_string(_e);
+    pq.push(make_pair(0, s));
+    dist[s] = 0;
+    path[s] = to_string(s);
+
+    int u  = s;
+    // თუ რიგიდან გამოვიდა t, ეი ნაპოვნია უმოკლესი გზა s დან  t-მდე და შევწყვიტავთ დეისქტრას ალგორითმს
+    while (!pq.empty() && u != t)
+    {
+        u = pq.top().second;
+        pq.pop();
+
+        list< pair<int, int> >::iterator i;
+        for (i = adj[u].begin(); i != adj[u].end(); ++i)
+        {
+            int v = (*i).first;
+            int weight = (*i).second;
+            if (dist[v] > dist[u] + weight){
+                dist[v] = dist[u] + weight;
+                path[v] = path[u] + to_string(v);
+
+                pq.push(make_pair(dist[v], v));
+                }
+        }
+    }
+
+    return {dist[t], path[t]};
+
+}
+
+
+void Graph::shortestPath(int s, string startingPath, int add_w)
+{
+    priority_queue< iPair, vector <iPair>, greater<iPair> > pq;
+    vector<int> dist(V, INF);
+    vector<string> path(V);
+
+    pq.push(make_pair(0, s));
+    dist[s] = 0;
+    path[s] = startingPath;
 
     while (!pq.empty())
     {
@@ -85,13 +125,35 @@ void Graph::shortestPath()
         }
     }
     
-    cout << "Vertex Distance from Source\n" << endl;
-    dist[0] -= this->through_w;
+    cout << "Path & Distance From Source: " << this->source << " Through: "<< this->through << "\n\n";
 
     for (int i = 0; i < V; ++i){
-        cout << to_string(this->source) << " -> " << i << " Path: " <<path[i] << " W: "<< dist[i] + this->through_w << endl;
+        if( dist[i] == INF ) {
+            cout << "Exception: ";
+            cout << i << " Doesn't Exists \n" << endl;;
+            continue;
+        }
+        dist[i] += add_w;
+        cout << i << " Path: " <<path[i] << " Weight: "<< dist[i] << endl;
         }
 }
+
+
+void Graph::executeSolution()
+{
+    
+    Tuple res = findShortestPath(this->source, this->through);
+    if (res.validate()){
+        shortestPath(this->through, res.path, res.weight);
+    }
+    else{
+        cout << "გრაფზე შეუძლებელია მოცემული ამოცანა" << endl;
+    }
+    
+
+}
+
+
 int main()
 {
     int V = 5;
@@ -105,8 +167,7 @@ int main()
     g.addEdge(_b, _d, 2);
     g.addEdge(_d, _a, 6);
     g.addEdge(_a, _b, 3);
-
-    g.shortestPath();
+    g.executeSolution();
 
     return 0;
 }
