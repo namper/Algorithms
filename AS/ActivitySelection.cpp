@@ -9,13 +9,14 @@ void printSolution(vector <int> A)
     vector <int> :: iterator it; 
     for(it = A.begin(); it != A.end(); ++it) 
         cout <<*it<<" "; 
+    cout << endl;
 }
 
 void GreedySelector(vector<int> s, vector<int> f) 
 { 
-  if(s.size() == f.size()){
+  int n = s.size();
+  if(n == f.size()){
       int i = 0;
-      int n = s.size();
       vector <int> A;
       A.push_back(i);
 
